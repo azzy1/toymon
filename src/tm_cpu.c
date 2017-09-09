@@ -304,8 +304,10 @@ static void tm_cpu_usage_update(struct tm_item *item, double usage)
 	int len;
 
 	len = sprintf(buf, "%.1f", usage);
-	if (!strncmp(buf, "100", 3))
+	if (!strncmp(buf, "100", 3)) {
 		buf[3] = '\0';
+		len = 3;
+	}
 
 	tm_item_cmp_and_update(item, buf, len);
 }
