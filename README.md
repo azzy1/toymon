@@ -7,7 +7,7 @@ You would need following packages.
 - pango-devel
 - librsvg2-devel
 
-To buld:
+To build:
 
 1. run ./autogen.sh shell script.
 
