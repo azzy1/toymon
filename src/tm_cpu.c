@@ -24,12 +24,6 @@ struct tm_cpu_stat {
 	};
 };
 
-struct tm_cpu_temperature {
-	struct list_head	list;
-	const char		*label;
-	const char		*input;
-};
-
 struct tm_cpu {
 	/* User configuration variable. */
 	u32			cpu_fg;
