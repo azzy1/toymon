@@ -628,11 +628,11 @@ static void tm_x_wm_init(struct tm_x *x)
 	xcb_change_property(c, XCB_PROP_MODE_REPLACE, win, atoms[1].atom,
 			    atoms[0].atom, 8, strlen(PACKAGE), PACKAGE);
 
-	/* How _NET_WM_WINDOW_TYPE_DOCK handled is dependent on WM.
+	/* How _NET_WM_WINDOW_TYPE_DESKTOP handled is dependent on WM.
 	 * But I think this is the best way to not make title bar decorated.
 	 */
 	xcb_change_property(c, XCB_PROP_MODE_REPLACE, win, atoms[2].atom,
-			    XCB_ATOM_ATOM, 32, 1, &atoms[4].atom);
+			    XCB_ATOM_ATOM, 32, 1, &atoms[3].atom);
 
 	wm_state[0] = atoms[12].atom;
 	wm_state[1] = atoms[13].atom;
@@ -802,6 +802,18 @@ err:
 	goto out;
 }
 
+static void tm_x_move_window(struct tm_x *x)
+{
+	u32 value_list[2];
+	u16 value_mask;
+
+	value_mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
+	value_list[0] = x->x;
+	value_list[1] = x->y;
+
+	xcb_configure_window(x->c, x->win, value_mask, value_list);
+}
+
 static void tm_x_get_max_font_height(struct tm_x *x)
 {
 	PangoLayout *layout;
@@ -944,6 +956,11 @@ static void *tm_x_wait_events(void *data)
 	/* Map the window. */
 	xcb_map_window(c, x->win);
 	tm_x_flush(tc);
+
+	/* WM may ignore x, y coordinates which are specified at window
+	 * creation time. Try once more after window is mapped.
+	 */
+	tm_x_move_window(x);
 
 	err = 0;
 	/* Handle all X events. */
