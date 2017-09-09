@@ -1,0 +1,14 @@
+*.o
+*.xz
+
+aclocal.m4
+config.*
+configure
+Makefile
+Makefile.in
+stamp-h1
+
+/autom4te.cache/
+/build-aux/
+/src/.deps/
+/src/toymon
