@@ -3,7 +3,6 @@
 #include "tm_x.h"
 #include <stdio.h>
 #include <string.h>
-#include <math.h>
 
 struct tm_cpu_stat {
 	union {
@@ -294,11 +293,14 @@ out:
 
 static void tm_cpu_usage_update(struct tm_item *item, double usage)
 {
-	char buf[8];
+	char buf[16];
 	int len;
 
 	len = sprintf(buf, "%.1f", usage);
-	if (!strncmp(buf, "100", 3)) {
+	if (buf[2] == '.') {
+		buf[4] = '\0';
+		len = 4;
+	} else {
 		buf[3] = '\0';
 		len = 3;
 	}
