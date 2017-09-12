@@ -1131,7 +1131,7 @@ static void tm_x_help(struct tm_context *tc)
 	       "\t\tSpecify how large the icon should be relative to font height.\n"
 	       "\t--font <FONT-DESCRIPTION>\n"
 	       "\t\te.g.: \"sans-serif bold 18\"\n"
-	       "\t\tSee https://developer.gnome.org/pango/unstable/pango-Fonts.html#pango-font-description-from-string\n");
+	       "\t\tSee https://developer.gnome.org/pango/stable/pango-Fonts.html#pango-font-description-from-string\n");
 }
 
 static void tm_x_draw(struct tm_context *tc)
