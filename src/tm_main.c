@@ -243,14 +243,12 @@ tm_init_all(struct tm_context *tc,  int argc, char **argv, int *exit_idx)
 			continue;
 
 		err = o->init(tc, argc, argv);
-		if (err) {
-			*exit_idx = i;
-			goto out;
-		}
+		if (err)
+			break;
 	}
 
 	*exit_idx = i;
-out:
+
 	return err;
 }
 
