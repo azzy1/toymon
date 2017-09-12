@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-#include <math.h>
 
 struct tm_clock {
 	/* User configuration variables. */
@@ -230,20 +229,21 @@ static int tm_clock_uptime_update(struct tm_context *tc, long uptime)
 
 static int tm_clock_loadavg_str(char *s, unsigned long load)
 {
-	const char *fmt;
-	double ld, rld;
+	double ld;
+	int len;
 
 	ld = (double)load / (1 << SI_LOAD_SHIFT);
-	rld = round(ld);
+	sprintf(s, "%.2f", ld);
 
-	if (rld >= 100)
-		fmt = "%.0f";
-	else if (rld >= 10)
-		fmt = "%.1f";
-	else
-		fmt = "%.2f";
+	if (s[3] == '.') {
+		s[3] = '\0';
+		len = 3;
+	} else {
+		s[4] = '\0';
+		len = 4;
+	}
 
-	return sprintf(s, fmt, ld);
+	return len;
 }
 
 static int

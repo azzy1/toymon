@@ -12,7 +12,6 @@
 #include <sys/ioctl.h>
 #include <stdio.h>
 #include <string.h>
-#include <math.h>
 #include <stdlib.h>
 
 struct tm_net_stat {
@@ -616,28 +615,25 @@ static void
 tm_net_stat_update(struct tm_item *item_stat, struct tm_item *item_unit,
 		   const char *fmt_unit, double data)
 {
-	const char *units, *p, *fmt;
+	const char *units, *p;
 	char str[16];
-	double rd;
-	int len;
+	size_t len;
 
 	units = p = " kMGTPE";
 
-	while (round(data) >= 1000) {
+	while (data >= 1000) {
 		data /= 1000.0;
 		p++;
 	}
 
-	rd = round(data);
-
-	if (rd >= 100)
-		fmt = "%.0f";
-	else if (rd >= 10)
-		fmt = "%.1f";
-	else
-		fmt = "%.2f";
-
-	len = sprintf(str, fmt, data);
+	sprintf(str, "%.2f", data);
+	if (str[3] == '.') {
+		str[3] = '\0';
+		len = 3;
+	} else {
+		str[4] = '\0';
+		len = 4;
+	}
 	tm_item_cmp_and_update(item_stat, str, len);
 
 	if (p == units)

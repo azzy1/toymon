@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdio.h>
 #include <pthread.h>
-#include <math.h>
 
 static LIST_HEAD(list_update);
 
@@ -40,31 +39,26 @@ void tm_item_cmp_and_update(struct tm_item *item, const char *str, int len)
 void tm_item_data_unit_update(struct tm_item *item_data,
 			      struct tm_item *item_unit, double data)
 {
-	const char *units, *p, *fmt;
+	const char *units, *p;
 	char str[16];
-	double rd;
 	int len;
 
 	units = p = " kMGTPE";
 
-	/* printf(3) says 'f' conversion specifier automatically round the
-	 * double. We need to take this into consideration.
-	 */
-	while (round(data) >= 1000) {
+	while (data >= 1000) {
 		data /= 1024.0;
 		p++;
 	}
 
-	rd = round(data);
+	sprintf(str, "%.2f", data);
+	if (str[3] == '.') {
+		str[3] = '\0';
+		len = 3;
+	} else {
+		str[4] = '\0';
+		len = 4;
+	}
 
-	if (rd >= 100)
-		fmt = "%.0f";
-	else if (rd >= 10)
-		fmt = "%.1f";
-	else
-		fmt = "%.2f";
-
-	len = sprintf(str, fmt, data);
 	tm_item_cmp_and_update(item_data, str, len);
 
 	if (p == units)
