@@ -536,7 +536,8 @@ static int tm_x_create_window(struct tm_x *x)
 
 	win = xcb_generate_id(c);
 	if (win == -1) {
-		pr_err("xcb_generate_id");
+		fprintf(stderr, "%s(%d): xcb_generate_id failed.\n",
+			__func__, __LINE__);
 		goto err;
 	};
 
